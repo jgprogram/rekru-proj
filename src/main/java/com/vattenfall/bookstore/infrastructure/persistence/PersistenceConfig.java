@@ -1,4 +1,4 @@
-package com.vattenfall.bookstore.infrastructure.storage;
+package com.vattenfall.bookstore.infrastructure.persistence;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -7,7 +7,7 @@ import com.vattenfall.bookstore.domain.AuthorRepository;
 import com.vattenfall.bookstore.domain.BookstoreRepository;
 
 @Configuration
-class StorageConfig {
+class PersistenceConfig {
 
     @Bean
     AuthorRepository authorRepository() {

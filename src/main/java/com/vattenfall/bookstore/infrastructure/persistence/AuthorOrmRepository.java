@@ -1,4 +1,4 @@
-package com.vattenfall.bookstore.infrastructure.storage;
+package com.vattenfall.bookstore.infrastructure.persistence;
 
 import java.util.Map;
 import java.util.Optional;
@@ -9,11 +9,11 @@ import com.vattenfall.bookstore.domain.AuthorRepository;
 
 import static java.util.Optional.ofNullable;
 
-class InMemoryAuthorRepository implements AuthorRepository {
+class AuthorOrmRepository implements AuthorRepository {
 
     private final Map<Integer, Author> authors = new ConcurrentHashMap<>();
 
-    InMemoryAuthorRepository() {
+    AuthorOrmRepository() {
     }
 
     @Override

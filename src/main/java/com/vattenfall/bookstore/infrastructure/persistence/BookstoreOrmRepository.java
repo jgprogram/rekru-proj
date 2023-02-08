@@ -1,4 +1,4 @@
-package com.vattenfall.bookstore.infrastructure.storage;
+package com.vattenfall.bookstore.infrastructure.persistence;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
