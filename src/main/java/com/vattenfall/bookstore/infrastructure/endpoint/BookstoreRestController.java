@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vattenfall.bookstore.application.AuthorDoesNotExistsException;
 import com.vattenfall.bookstore.application.BookDto;
 import com.vattenfall.bookstore.application.BookstoreApplicationService;
+import com.vattenfall.bookstore.application.InvalidBookDataException;
 
 @RestController
 @RequestMapping("/books")
@@ -33,7 +34,7 @@ public class BookstoreRestController {
         try {
             bookstoreApplicationService.addBook(bookDto);
             return ResponseEntity.ok().build();
-        } catch (AuthorDoesNotExistsException e) {
+        } catch (AuthorDoesNotExistsException | InvalidBookDataException e) {
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
