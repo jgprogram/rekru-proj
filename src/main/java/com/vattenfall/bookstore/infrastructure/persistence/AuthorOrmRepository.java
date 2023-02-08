@@ -1,28 +1,34 @@
 package com.vattenfall.bookstore.infrastructure.persistence;
 
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 import com.vattenfall.bookstore.domain.Author;
 import com.vattenfall.bookstore.domain.AuthorRepository;
 
-import static java.util.Optional.ofNullable;
-
 class AuthorOrmRepository implements AuthorRepository {
 
-    private final Map<Integer, Author> authors = new ConcurrentHashMap<>();
+    private final AuthorDao authorDao;
 
-    AuthorOrmRepository() {
+    AuthorOrmRepository(AuthorDao authorDao) {
+        this.authorDao = authorDao;
     }
 
     @Override
     public Optional<Author> findById(int authorId) {
-        return ofNullable(authors.get(authorId));
+        return authorDao.findByAuthorId(authorId)
+                        .map(AuthorEntity::toDomainObject);
     }
 
     @Override
     public void save(Author author) {
-        authors.putIfAbsent(author.id(), author);
+        if(authorDao.findByAuthorId(author.id()).isPresent()) {
+            return;
+        }
+
+        authorDao.save(new AuthorEntity(
+                author.id(),
+                author.name(),
+                author.surname()
+        ));
     }
 }

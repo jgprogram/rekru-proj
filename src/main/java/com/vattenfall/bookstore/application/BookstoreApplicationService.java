@@ -7,7 +7,7 @@ import com.vattenfall.bookstore.domain.AuthorRepository;
 import com.vattenfall.bookstore.domain.Book;
 import com.vattenfall.bookstore.domain.BookstoreRepository;
 
-import static java.util.stream.Collectors.toUnmodifiableList;
+import jakarta.transaction.Transactional;
 
 public class BookstoreApplicationService {
 
@@ -22,13 +22,25 @@ public class BookstoreApplicationService {
     public List<BookDto> getBooks() {
         return bookstoreRepository.findAll().stream()
                                   .map(book -> new BookDto(book.isbn(), book.title(), book.authorId()))
-                                  .collect(toUnmodifiableList());
+                                  .toList();
     }
 
-    public void addBook(BookDto bookDto) throws AuthorDoesNotExistsException {
-        Author author = authorRepository.findById(bookDto.getAuthorId())
+    @Transactional
+    public void addBook(BookDto bookDto) throws AuthorDoesNotExistsException, InvalidBookDataException {
+        Author author = authorRepository.findById(bookDto.authorId())
                                         .orElseThrow(AuthorDoesNotExistsException::new);
-        Book book = new Book(bookDto.getIsbn(), bookDto.getTitle(), author.id());
+        assertBookIsCorrect(bookDto);
+        Book book = new Book(bookDto.isbn(), bookDto.title(), author.id());
         bookstoreRepository.save(book);
+    }
+
+    private void assertBookIsCorrect(BookDto bookDto) throws InvalidBookDataException {
+        if(bookDto.isbn() == null || bookDto.isbn().length() != 13) {
+            throw InvalidBookDataException.forInvalidIsbn();
+        }
+
+        if(bookDto.title() == null || bookDto.title().length() < 1) {
+            throw InvalidBookDataException.forInvalidTitle();
+        }
     }
 }

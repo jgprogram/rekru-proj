@@ -1,27 +1,35 @@
 package com.vattenfall.bookstore.infrastructure.persistence;
 
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.vattenfall.bookstore.domain.Book;
 import com.vattenfall.bookstore.domain.BookstoreRepository;
 
-import static java.util.Collections.unmodifiableList;
+class BookstoreOrmRepository implements BookstoreRepository {
 
-class InMemoryBookstoreRepository implements BookstoreRepository {
+    private final BookDao bookDao;
 
-    private final List<Book> books = new CopyOnWriteArrayList<>();
-
-    InMemoryBookstoreRepository() {
+    BookstoreOrmRepository(BookDao bookDao) {
+        this.bookDao = bookDao;
     }
 
     @Override
     public void save(Book book) {
-        books.add(book);
+        if(bookDao.findByIsbn(book.isbn()).isPresent()) {
+            return;
+        }
+
+        bookDao.save(new BookEntity(
+                book.isbn(),
+                book.title(),
+                book.authorId()
+        ));
     }
 
     @Override
     public List<Book> findAll() {
-        return unmodifiableList(books);
+        return bookDao.findAllByOrderByIsbn().stream()
+                      .map(BookEntity::toDomainObject)
+                      .toList();
     }
 }

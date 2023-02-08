@@ -10,12 +10,12 @@ import com.vattenfall.bookstore.domain.BookstoreRepository;
 class PersistenceConfig {
 
     @Bean
-    AuthorRepository authorRepository() {
-        return new InMemoryAuthorRepository();
+    AuthorRepository authorRepository(AuthorDao authorDao) {
+        return new AuthorOrmRepository(authorDao);
     }
 
     @Bean
-    BookstoreRepository bookstoreRepository() {
-        return new InMemoryBookstoreRepository();
+    BookstoreRepository bookstoreRepository(BookDao bookDao) {
+        return new BookstoreOrmRepository(bookDao);
     }
 }
