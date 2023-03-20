@@ -15,10 +15,6 @@ class BookstoreOrmRepository implements BookstoreRepository {
 
     @Override
     public void save(Book book) {
-        if(bookDao.findByIsbn(book.isbn()).isPresent()) {
-            return;
-        }
-
         bookDao.save(new BookEntity(
                 book.isbn(),
                 book.title(),
@@ -31,5 +27,10 @@ class BookstoreOrmRepository implements BookstoreRepository {
         return bookDao.findAllByOrderByIsbn().stream()
                       .map(BookEntity::toDomainObject)
                       .toList();
+    }
+
+    @Override
+    public boolean existsByIsbn(String isbn) {
+        return bookDao.existsByIsbn(isbn);
     }
 }

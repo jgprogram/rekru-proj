@@ -21,10 +21,6 @@ class AuthorOrmRepository implements AuthorRepository {
 
     @Override
     public void save(Author author) {
-        if(authorDao.findByAuthorId(author.id()).isPresent()) {
-            return;
-        }
-
         authorDao.save(new AuthorEntity(
                 author.id(),
                 author.name(),
