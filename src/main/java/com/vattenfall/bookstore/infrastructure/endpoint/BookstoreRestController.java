@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,8 +30,8 @@ public class BookstoreRestController {
         return bookstoreApplicationService.getBooks();
     }
 
-    @PutMapping
-    public ResponseEntity<Void> putBook(@RequestBody BookDto bookDto) {
+    @PostMapping
+    public ResponseEntity<Void> postBook(@RequestBody BookDto bookDto) {
         try {
             bookstoreApplicationService.addBook(bookDto);
             return ResponseEntity.ok().build();

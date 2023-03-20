@@ -30,8 +30,15 @@ public class BookstoreApplicationService {
         Author author = authorRepository.findById(bookDto.authorId())
                                         .orElseThrow(AuthorDoesNotExistsException::new);
         assertBookIsCorrect(bookDto);
+        assertBookDoesNotExist(bookDto);
         Book book = new Book(bookDto.isbn(), bookDto.title(), author.id());
         bookstoreRepository.save(book);
+    }
+
+    private void assertBookDoesNotExist(BookDto bookDto) throws InvalidBookDataException {
+        if(bookstoreRepository.existsByIsbn(bookDto.isbn())) {
+            throw new InvalidBookDataException("Book already exists");
+        }
     }
 
     private void assertBookIsCorrect(BookDto bookDto) throws InvalidBookDataException {

@@ -7,4 +7,6 @@ public interface BookstoreRepository {
     void save(Book book);
 
     List<Book> findAll();
+
+    boolean existsByIsbn(String isbn);
 }
